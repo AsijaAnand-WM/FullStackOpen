@@ -1,4 +1,4 @@
-> Create a Diagram depicting what happens in the situation where the user creates a new note on the page [https://studies.cs.helsinki.fi/exampleapp/notes](https://studies.cs.helsinki.fi/exampleapp/notes) by writing something into the text field and clicking the _Save_ button.
+> Create a Diagram depicting what happens in the situation where the user creates a new note on the page  https://studies.cs.helsinki.fi/exampleapp/note by writing something into the text field and clicking the _Save_ button.
 
 ```mermaid
 	sequenceDiagram
