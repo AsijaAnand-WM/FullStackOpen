@@ -16,7 +16,7 @@
 	activate server
 	server -->> browser : HTML document
 	deactivate server
-	Note right of browser : Rendering of webpage starts
+	Note right of browser : Re-rendering of webpage starts
 	Note right of browser : HTML document contains connections to /exampleapp/main.css and /exampleapp/main.js
 	
 	browser ->> server : GET https://studies.cs.helsinki.fi/exampleapp/main.css
@@ -34,6 +34,5 @@
 	activate server
 	server -->> browser : JSON File
 	deactivate server
-
-	Note right of browser: Now Callback function in JS code will be executed by browser and the 'note website' is rendered properly
+	Note right of browser: Now Callback function in JS code will be executed by browser and the 'note website' containing the note the user added is rendered. 
 ```
