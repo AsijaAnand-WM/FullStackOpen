@@ -21,10 +21,15 @@ const App = () => {
     }
     return (
         <div>
+            <h1> Anecdote of the day </h1>
+            <br />
             <p>{anecdotes[selected]}</p>
             <p>has {arr[selected]} votes</p>
             <button onClick={handleVote}>vote</button>
             <button onClick={() => setSelected(rGen())}>next anecdote</button>
+
+            <h1> Anecdote with most votes </h1>
+            <p>{anecdotes[arr.indexOf(Math.max(...arr))]}</p>
         </div>
     )
 }
