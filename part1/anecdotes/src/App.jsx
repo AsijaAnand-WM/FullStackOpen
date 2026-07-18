@@ -13,9 +13,17 @@ const App = () => {
     ]
     const rGen = () => Math.floor(Math.random() * anecdotes.length)
     const [selected, setSelected] = useState(0)
+    const [arr, setArr] = useState(Array(anecdotes.length).fill(0))
+    const handleVote = () => {
+        const copy = [...arr]
+        copy[selected] += 1
+        return setArr(copy)
+    }
     return (
         <div>
             <p>{anecdotes[selected]}</p>
+            <p>has {arr[selected]} votes</p>
+            <button onClick={handleVote}>vote</button>
             <button onClick={() => setSelected(rGen())}>next anecdote</button>
         </div>
     )
