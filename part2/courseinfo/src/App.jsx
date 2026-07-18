@@ -8,11 +8,10 @@ const Course = ({ course }) => {
                 part =>
                 <p key={part.id}>{part.name} {part.exercises}</p>
             )}
-            <p>total of {
-                course.parts[0].exercises +
-                course.parts[1].exercises +
-                course.parts[2].exercises
-            } exercises</p>
+            <p>total of {course.parts.reduce(
+                (acc, crr) => acc + crr.exercises,
+                0
+            )} exercises</p>
         </div>
     )
 }
