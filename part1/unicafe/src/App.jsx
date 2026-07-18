@@ -15,6 +15,13 @@ const Stats = ({data, value}) => (
 )
 
 const Statistics = ({good, neutral, bad}) => {
+    if((good + neutral + bad) === 0){
+        return (
+            <p>
+                No feedback given
+            </p>
+        )
+    }
     return (
         <div>
             <Stats data={'good'} value={good} />
