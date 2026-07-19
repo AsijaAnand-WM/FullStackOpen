@@ -1,33 +1,7 @@
 import { useState } from 'react'
-
-const Display = ({persons, search}) => {
-    if(search === '')
-        return (
-            <div>
-                <h2>Numbers</h2>
-                {persons.map(
-                    person =>
-                    <p key={person.number + person.name}>
-                    {person.name} {person.number}
-                    </p>
-                )}
-            </div>
-        )
-    const filtered = persons.filter(person => 
-        person.name.toLowerCase().includes(search.toLowerCase())
-    )
-    return (
-        <div>
-            <h2> Filtered </h2>
-            {filtered.map(
-                person =>
-                <p key={person.number + person.name}>
-                {person.name} {person.number}
-                </p>
-            )}
-        </div>
-    )
-}
+import Display from './Component/Display'
+import Add from './Component/Add'
+import Filter from './Component/Filter'
 
 const App = () => {
     const [persons, setPersons] = useState([
@@ -60,7 +34,6 @@ const App = () => {
         }
         setNewName('Add Number')
     }
-    
     const handleSearch = (event) => setSearch(event.target.value)
     const handleOnName = (event) => setNewName(event.target.value)
     const handleOnNumber = (event) => setNewNumber(event.target.value)
@@ -69,24 +42,13 @@ const App = () => {
         <div>
             <h1>Phonebook</h1>
             <br />
-            <h2>filter show with</h2>
-            <input value={search} onChange={handleSearch}/>
-            <br />
-            <br />
-            <h2>Add a new</h2>
-            <form onSubmit={handleSubmit}>
-                <div>
-                    name: <input value={newName} onChange={handleOnName}/>
-                </div>
-                <div>
-                    number: <input value={newNumber} onChange={handleOnNumber}/>
-                </div>
-
-                <div>
-                <button type="submit">add</button>
-                </div>
-            </form>
-            <br />
+            <Filter search={search} handleSearch={handleSearch} />
+            <Add
+                onSubmit={handleSubmit}
+                newName={newName}
+                newNumber={newNumber}
+                handleOnName={handleOnName}
+                handleOnNumber={handleOnNumber} />
             <Display persons={persons} search={search}/>
         </div>
     )
