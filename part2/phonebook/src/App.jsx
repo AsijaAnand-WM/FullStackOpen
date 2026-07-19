@@ -1,5 +1,34 @@
 import { useState } from 'react'
 
+const Display = ({persons, search}) => {
+    if(search === '')
+        return (
+            <div>
+                <h2>Numbers</h2>
+                {persons.map(
+                    person =>
+                    <p key={person.number + person.name}>
+                    {person.name} {person.number}
+                    </p>
+                )}
+            </div>
+        )
+    const filtered = persons.filter(person => 
+        person.name.toLowerCase().includes(search.toLowerCase())
+    )
+    return (
+        <div>
+            <h2> Filtered </h2>
+            {filtered.map(
+                person =>
+                <p key={person.number + person.name}>
+                {person.name} {person.number}
+                </p>
+            )}
+        </div>
+    )
+}
+
 const App = () => {
     const [persons, setPersons] = useState([
         { 
@@ -9,6 +38,7 @@ const App = () => {
     ]) 
     const [newName, setNewName] = useState('Add Number')
     const [newNumber, setNewNumber] = useState('00-00000-00000')
+    const [search, setSearch] = useState('')
 
     const check = () => {
         for(let i = 0; i < persons.length; i++){
@@ -30,17 +60,20 @@ const App = () => {
         }
         setNewName('Add Number')
     }
-    const handleOnName = (event) => {
-        setNewName(event.target.value)
-    }
-
-    const handleOnNumber = (event) => {
-        setNewNumber(event.target.value)
-    }
+    
+    const handleSearch = (event) => setSearch(event.target.value)
+    const handleOnName = (event) => setNewName(event.target.value)
+    const handleOnNumber = (event) => setNewNumber(event.target.value)
 
     return (
         <div>
-            <h2>Phonebook</h2>
+            <h1>Phonebook</h1>
+            <br />
+            <h2>filter show with</h2>
+            <input value={search} onChange={handleSearch}/>
+            <br />
+            <br />
+            <h2>Add a new</h2>
             <form onSubmit={handleSubmit}>
                 <div>
                     name: <input value={newName} onChange={handleOnName}/>
@@ -54,13 +87,7 @@ const App = () => {
                 </div>
             </form>
             <br />
-            <h2>Numbers</h2>
-            {persons.map(
-                person =>
-                <p key={person.number + person.name}>
-                    {person.name} {person.number}
-                </p>
-            )}
+            <Display persons={persons} search={search}/>
         </div>
     )
 }
