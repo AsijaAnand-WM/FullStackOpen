@@ -1,42 +1,53 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import axios from 'axios'
 import Display from './Component/Display'
 import Add from './Component/Add'
 import Filter from './Component/Filter'
 
 const App = () => {
-    const [persons, setPersons] = useState([
-        { 
-            name: 'Arto Hellas',
-            number: '00-99999-99999'
-        },
-    ]) 
-    const [newName, setNewName] = useState('Add Number')
-    const [newNumber, setNewNumber] = useState('00-00000-00000')
+    const [persons, setPersons] = useState([]) 
+    const [newName, setNewName] = useState('')
+    const [newNumber, setNewNumber] = useState('')
     const [search, setSearch] = useState('')
 
-    const check = () => {
-        for(let i = 0; i < persons.length; i++){
-            if(newName === persons[i].name && newNumber === persons[i].number) return true
-        }
-        return false
-    }
+    useEffect(() => {
+        axios
+            .get('http://localhost:3001/persons')
+            .then((response) => {
+                console.log('got it')
+                setPersons(response.data)
+            })
+    }, [])
+
+    const check = () => (
+        persons.some(
+            person =>
+                person.name === newName &&
+                person.number === newNumber
+        )
+    )
 
     const handleSubmit = (event) => {
         event.preventDefault()
-        if(check()) alert(`'${newName}' is already added to phonebook`)
-        else{
-            setPersons(persons.concat(
-                {
-                    name: newName,
-                    number: newNumber
-                }
-            ))
+
+        if(check()) {
+            alert(`'${newName}' is already added to phonebook`)
+            return
         }
-        setNewName('Add Number')
+        setPersons(prev =>
+            prev.concat({
+                name: newName,
+                number: newNumber
+            })
+        )
+
+        setNewName('')
+        setNewNumber('')
     }
+
     const handleSearch = (event) => setSearch(event.target.value)
-    const handleOnName = (event) => setNewName(event.target.value)
-    const handleOnNumber = (event) => setNewNumber(event.target.value)
+    const handleName   = (event) => setNewName(event.target.value)
+    const handleNumber = (event) => setNewNumber(event.target.value)
 
     return (
         <div>
@@ -47,8 +58,8 @@ const App = () => {
                 onSubmit={handleSubmit}
                 newName={newName}
                 newNumber={newNumber}
-                handleOnName={handleOnName}
-                handleOnNumber={handleOnNumber} />
+                handleName={handleName}
+                handleNumber={handleNumber} />
             <Display persons={persons} search={search}/>
         </div>
     )
