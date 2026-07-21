@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios'
+import connect from './Services/quake.js'
 import Display from './Component/Display'
 import Add from './Component/Add'
 import Filter from './Component/Filter'
@@ -11,12 +11,9 @@ const App = () => {
     const [search, setSearch] = useState('')
 
     useEffect(() => {
-        axios
-            .get('http://localhost:3001/persons')
-            .then((response) => {
-                console.log('got it')
-                setPersons(response.data)
-            })
+        connect
+            .afetchd()
+            .then(data => setPersons(data))
     }, [])
 
     const check = () => (
@@ -34,15 +31,13 @@ const App = () => {
             alert(`'${newName}' is already added to phonebook`)
             return
         }
-        setPersons(prev =>
-            prev.concat({
-                name: newName,
-                number: newNumber
+        connect
+            .apostd(newName, newNumber)
+            .then(data => {
+                setPersons(orig => orig.concat(data))
+                setNewName('')
+                setNewNumber('')
             })
-        )
-
-        setNewName('')
-        setNewNumber('')
     }
 
     const handleSearch = (event) => setSearch(event.target.value)
