@@ -24,6 +24,20 @@ const App = () => {
         )
     )
 
+    const handleDel = (id) => {
+        const name = persons.find(p => p.id === id).name
+        if(!window.confirm(`Delete ${name} ?`)) return
+        connect
+            .adeld(id)
+            .then(() => {
+                const arrAfterDel = persons.filter(
+                    person =>
+                        person.id !== id
+                )
+                setPersons(arrAfterDel)
+            })
+    }
+
     const handleSubmit = (event) => {
         event.preventDefault()
 
@@ -55,7 +69,10 @@ const App = () => {
                 newNumber={newNumber}
                 handleName={handleName}
                 handleNumber={handleNumber} />
-            <Display persons={persons} search={search}/>
+            <Display
+                persons={persons}
+                search={search}
+                handleDel={handleDel}/>
         </div>
     )
 }

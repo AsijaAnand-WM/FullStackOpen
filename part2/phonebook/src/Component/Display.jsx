@@ -1,4 +1,4 @@
-const Display = ({persons, search}) => {
+const Display = ({persons, search, handleDel}) => {
     if(search === '')
         return (
             <div>
@@ -6,12 +6,13 @@ const Display = ({persons, search}) => {
                 {persons.map(
                     person =>
                     <p key={person.number + person.name}>
-                    {person.name} {person.number}
+                    <button onClick={() => handleDel(person.id)}>Del</button> 
+                    {" " + person.name} {person.number}
                     </p>
                 )}
             </div>
         )
-    const filtered = persons.filter(person => 
+    const filtered = persons.filter(person =>
         person.name.toLowerCase().includes(search.toLowerCase())
     )
     return (

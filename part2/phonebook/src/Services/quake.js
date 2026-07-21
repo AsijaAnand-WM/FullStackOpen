@@ -16,4 +16,9 @@ const apostd = (name, number) => (
         .then(res => res.data)
 )
 
-export default { afetchd, apostd }
+const adeld = (id) => (
+    axios
+        .delete(`${URL}/${id}`)
+)
+
+export default { afetchd, apostd, adeld }
