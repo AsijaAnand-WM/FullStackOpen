@@ -16,17 +16,19 @@ const App = () => {
             .then(data => setPersons(data))
     }, [])
 
-    const check = () => (
-        persons.some(
-            person =>
-                person.name === newName &&
-                person.number === newNumber
-        )
-    )
+    const check = () => {
+        if(persons.some(p => p.name === newName)){
+            if(persons.some(p => p.number === newNumber)){
+                return 2
+            }
+            return 1
+        }
+        return 0
+    }
 
     const handleDel = (id) => {
         const name = persons.find(p => p.id === id).name
-        if(!window.confirm(`Delete ${name} ?`)) return
+        if(!window.confirm(`Delete ${name}?`)) return
         connect
             .adeld(id)
             .then(() => {
@@ -41,17 +43,34 @@ const App = () => {
     const handleSubmit = (event) => {
         event.preventDefault()
 
-        if(check()) {
+
+        if(check() === 2) {
             alert(`'${newName}' is already added to phonebook`)
-            return
         }
-        connect
-            .apostd(newName, newNumber)
-            .then(data => {
-                setPersons(orig => orig.concat(data))
-                setNewName('')
-                setNewNumber('')
-            })
+        else if(check() === 1) {
+            if(!window.confirm(`Update contact of ${newName}?`)) return
+            const person = persons.find(p => p.name === newName)
+            connect
+                .aputd(person, newNumber)
+                .then(data => {
+                    setPersons(persons.map(
+                        person => (
+                            person.name === newName ? data : person
+                        ))
+                    )
+                    setNewName('')
+                    setNewNumber('')
+                })
+        }
+        else {
+            connect
+                .apostd(newName, newNumber)
+                .then(data => {
+                    setPersons(orig => orig.concat(data))
+                    setNewName('')
+                    setNewNumber('')
+                })
+        }
     }
 
     const handleSearch = (event) => setSearch(event.target.value)

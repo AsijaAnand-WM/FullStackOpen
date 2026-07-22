@@ -21,4 +21,13 @@ const adeld = (id) => (
         .delete(`${URL}/${id}`)
 )
 
-export default { afetchd, apostd, adeld }
+const aputd = (person, number) => (
+    axios
+        .put(`${URL}/${person.id}`, {
+            ...person,
+            number
+        })
+        .then(res => res.data)
+)
+
+export default { afetchd, apostd, adeld, aputd }
