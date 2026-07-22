@@ -6,7 +6,9 @@ const Display = ({persons, search, handleDel}) => {
                 {persons.map(
                     person =>
                     <p key={person.number + person.name}>
-                    <button onClick={() => handleDel(person.id)}>Del</button> 
+                    <button onClick={() => handleDel(person.id)} className='btn btn-error'>
+                        Del
+                    </button> 
                     {" " + person.name} {person.number}
                     </p>
                 )}

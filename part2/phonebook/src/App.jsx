@@ -3,12 +3,17 @@ import connect from './Services/quake.js'
 import Display from './Component/Display'
 import Add from './Component/Add'
 import Filter from './Component/Filter'
+import Info from './Component/Info'
 
 const App = () => {
     const [persons, setPersons] = useState([]) 
     const [newName, setNewName] = useState('')
     const [newNumber, setNewNumber] = useState('')
     const [search, setSearch] = useState('')
+    const [info, setInfo] = useState({
+        data:'',
+        name:''
+    })
 
     useEffect(() => {
         connect
@@ -17,13 +22,21 @@ const App = () => {
     }, [])
 
     const check = () => {
-        if(persons.some(p => p.name === newName)){
-            if(persons.some(p => p.number === newNumber)){
+        const person = persons.find(p => p.name === newName)
+        if(person){
+            if(person.number === newNumber){
                 return 2
             }
             return 1
         }
         return 0
+    }
+
+    const infoHandler = (data, name) => {
+        setInfo({ data, name })
+        setTimeout(() => {
+            setInfo({ data: '', name: '' })
+        },2000)
     }
 
     const handleDel = (id) => {
@@ -37,17 +50,27 @@ const App = () => {
                         person.id !== id
                 )
                 setPersons(arrAfterDel)
+                infoHandler('del', name)
+            })
+            .catch(err => {
+                infoHandler('error', err)
             })
     }
 
     const handleSubmit = (event) => {
         event.preventDefault()
-
-
-        if(check() === 2) {
-            alert(`'${newName}' is already added to phonebook`)
+        const isThere = check()
+        const clearNew = () => {
+            setNewName('')
+            setNewNumber('')
         }
-        else if(check() === 1) {
+
+        if(isThere === 2) {
+            // alert(`'${newName}' is already added to phonebook`)
+            infoHandler('error', 'Already There')
+            clearNew()
+        }
+        else if(isThere === 1) {
             if(!window.confirm(`Update contact of ${newName}?`)) return
             const person = persons.find(p => p.name === newName)
             connect
@@ -58,8 +81,11 @@ const App = () => {
                             person.name === newName ? data : person
                         ))
                     )
-                    setNewName('')
-                    setNewNumber('')
+                    infoHandler('mod', newName)
+                    clearNew()
+                })
+                .catch(err => {
+                    infoHandler('error', err)
                 })
         }
         else {
@@ -67,8 +93,11 @@ const App = () => {
                 .apostd(newName, newNumber)
                 .then(data => {
                     setPersons(orig => orig.concat(data))
-                    setNewName('')
-                    setNewNumber('')
+                    infoHandler('add', newName)
+                    clearNew()
+                })
+                .catch(err => {
+                    infoHandler('error', err)
                 })
         }
     }
@@ -79,9 +108,10 @@ const App = () => {
 
     return (
         <div>
-            <h1>Phonebook</h1>
-            <br />
-            <Filter search={search} handleSearch={handleSearch} />
+            <h1 className='terminal'>Phonebook</h1>
+            <Filter
+                search={search}
+                handleSearch={handleSearch} />
             <Add
                 onSubmit={handleSubmit}
                 newName={newName}
@@ -91,7 +121,8 @@ const App = () => {
             <Display
                 persons={persons}
                 search={search}
-                handleDel={handleDel}/>
+                handleDel={handleDel} />
+            <Info data={info.data} name={info.name} search={search}/>
         </div>
     )
 }
